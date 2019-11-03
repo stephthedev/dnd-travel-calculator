@@ -1,0 +1,38 @@
+{
+  "name": "dnd-travel-calculator",
+  "version": "0.0.1",
+  "description": "D&D 5e travel calculator",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stephthedev/dnd-travel-calculator.git"
+  },
+  "keywords": [
+    "D&D",
+    "dungeons",
+    "dragons",
+    "5e",
+    "travel",
+    "distance",
+    "calculator",
+    "time"
+  ],
+  "devDependencies": {
+    "browserify": "^14.5.0",
+    "config-browserify": "^1.0.5",
+    "grunt": "^1.0.4",
+    "grunt-browserify": "^5.3.0",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-uglify": "^3.1.0",
+    "mocha": "^4.0.1"
+  },
+  "author": "stephthedev@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stephthedev/dnd-travel-calculator/issues"
+  },
+  "homepage": "https://github.com/stephthedev/dnd-travel-calculator#readme"
+}
