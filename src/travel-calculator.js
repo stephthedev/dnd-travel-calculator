@@ -2,19 +2,21 @@ var config = require("config");
 
 var TravelCalculator = (function () {
 	/**
-	* @param totalMiles [int] The total number of miles to process
+	* @param normalTerrainMiles [int] The total miles in normal terrain
+	* @param difficultTerrainMiles [int] The total miles in difficult terrain
+	* @param travelPace [string] The travel pace used (normal|slow|fast)
 	* @return [map] An associative array that represents a time object:
 	{ days: <int>, hours: <int>, minutes: <int>}
 	*/
-	var calculateDistance = function(normalTerrainMiles, difficultTerrainMiles, pace) {
+	var calculateTravelTimeByLand = function(normalTerrainMiles, difficultTerrainMiles, travelPace) {
 		//0. Check the pace
-		if (!(pace == 'fast' || pace == 'slow' || pace == 'normal')) {
-			pace = "normal";
+		if (!(travelPace == 'fast' || travelPace == 'slow' || travelPace == 'normal')) {
+			travelPace = "normal";
 		}
 
 		//1. Independently get the travel times for normal and diff terrains
-		var normalResult = calculate(normalTerrainMiles, false, pace);
-		var difficultResult = calculate(difficultTerrainMiles, true, pace);
+		var normalResult = calculate(normalTerrainMiles, false, "land", travelPace);
+		var difficultResult = calculate(difficultTerrainMiles, true, "land", travelPace);
 		
 		//2. Add the results together
 		var mergedResult = {
@@ -24,11 +26,29 @@ var TravelCalculator = (function () {
 		};
 
 		//3. Make human readable
-		upConvertTime(mergedResult, pace); 
+		upConvertTime(mergedResult, "land", travelPace); 
 		return mergedResult;
 	};
 
-	var calculate = function(totalMiles, isDifficult, pace) {
+	var calculateTravelTimeBySea = function(totalMiles, boatType) {
+		//0. Check the boat type
+
+		//1. Get the travel time
+		var result = calculate(totalMiles, false, "sea", boatType);
+
+		//2. Upconvert
+		upConvertTime(result, "sea", boatType);
+		return result;
+	};
+
+	/**
+	* @param totalMiles [int] The total miles to travel
+	* @param isDifficult [boolean] Whether the travel is over difficult terrain
+	* @param travelType [String] Possible values: "land", "sea"
+	* @para travelPace [string] Possible values: (fast|normal|slow|galley|keelboat|longship|rowboat|sailingShip|warship)
+	*/
+	var calculate = function(totalMiles, isDifficult, travelType, travelPace) {
+		var configPrefix = "Client.5e." + travelType + "." + travelPace;
 		var time = {
 			days: 0,
 			hours: 0,
@@ -39,11 +59,11 @@ var TravelCalculator = (function () {
 			return time;
 		}
 
-		var milesPerDay = config.get("Client.5e." + pace + ".milesPerDay");
+		var milesPerDay = config.get(configPrefix + ".milesPerDay");
 		if (isDifficult) {
 			milesPerDay /= 2;
 		}
-		var maxHoursTraveledPerDay = config.get("Client.5e." + pace + ".hoursPerDay");
+		var maxHoursTraveledPerDay = config.get(configPrefix + ".hoursPerDay");
 		var milesPerHour = milesPerDay / maxHoursTraveledPerDay;
 		var minsPerMile = 60 / milesPerHour;
 		var remainingMiles = totalMiles % milesPerDay; 
@@ -62,7 +82,7 @@ var TravelCalculator = (function () {
 	* to
 	* days: 2, hours: 0, minutes: 0
 	*/ 
-	var upConvertTime = function(time, pace) {
+	var upConvertTime = function(time, travelType, travelPace) {
 		//1. Upconvert minutes to hours by mod-ing the value by 60 since there are 60 minutes in an hour
 		var modMinutes = time.minutes % 60;
 		//Then, add the quotient back to the hours since that represents 
@@ -71,7 +91,7 @@ var TravelCalculator = (function () {
 		time.minutes = modMinutes;
 
 		//2. Upconvert hours to days by mod-ing the total hours by the hours traveled in a day
-		var maxHoursTraveledPerDay = config.get("Client.5e." + pace + ".hoursPerDay");
+		var maxHoursTraveledPerDay = config.get("Client.5e." + travelType + "." + travelPace + ".hoursPerDay");
 		var modHours = time.hours % maxHoursTraveledPerDay;
 		//Then, add the quotient back to the days since that represents
 		//how many days were made from the hours
@@ -86,7 +106,8 @@ var TravelCalculator = (function () {
 	};
   
 	return {
-  		calculateDistance : calculateDistance
+  		calculateTravelTimeByLand : calculateTravelTimeByLand,
+  		calculateTravelTimeBySea : calculateTravelTimeBySea
 	};
 
 })();
