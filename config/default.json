@@ -17,22 +17,28 @@
 			},
 			"sea" : {
 				"galley" : {
-					"milesPerDay" : 96
+					"milesPerDay" : 96,
+					"hoursPerDay" : 24
 				},
 				"keelboat" : {
-					"milesPerDay" : 72
+					"milesPerDay" : 72,
+					"hoursPerDay" : 24
 				},
 				"longship" : {
-					"milesPerDay" : 120
+					"milesPerDay" : 120,
+					"hoursPerDay" : 24
 				},
 				"rowboat" : {
-					"milesPerDay" : 24
+					"milesPerDay" : 24,
+					"hoursPerDay" : 8
 				},
 				"sailingShip" : {
-					"milesPerDay" : 120
+					"milesPerDay" : 120,
+					"hoursPerDay" : 24
 				},
 				"warship" : {
-					"milesPerDay" : 96
+					"milesPerDay" : 96,
+					"hoursPerDay" : 24
 				}
 			}
 		}
