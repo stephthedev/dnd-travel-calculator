@@ -1,17 +1,39 @@
 {
 	"Client" : {
 		"5e" : {
-			"fast" : {
-				"milesPerDay" : 30,
-				"hoursPerDay" : 8
-			},	 
-			"normal" : {
-				"milesPerDay" : 24,
-				"hoursPerDay" : 8
+			"land" : {
+				"fast" : {
+					"milesPerDay" : 30,
+					"hoursPerDay" : 8
+				},	 
+				"normal" : {
+					"milesPerDay" : 24,
+					"hoursPerDay" : 8
+				},
+				"slow" : {
+					"milesPerDay" : 18,
+					"hoursPerDay" : 8
+				}
 			},
-			"slow" : {
-				"milesPerDay" : 18,
-				"hoursPerDay" : 8
+			"sea" : {
+				"galley" : {
+					"milesPerDay" : 96
+				},
+				"keelboat" : {
+					"milesPerDay" : 72
+				},
+				"longship" : {
+					"milesPerDay" : 120
+				},
+				"rowboat" : {
+					"milesPerDay" : 24
+				},
+				"sailingShip" : {
+					"milesPerDay" : 120
+				},
+				"warship" : {
+					"milesPerDay" : 96
+				}
 			}
 		}
 	}

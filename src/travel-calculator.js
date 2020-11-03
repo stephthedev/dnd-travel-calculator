@@ -2,11 +2,13 @@ var config = require("config");
 
 var TravelCalculator = (function () {
 	/**
-	* @param totalMiles [int] The total number of miles to process
+	* @param normalTerrainMiles [int] The total miles in normal terrain
+	* @param difficultTerrainMiles [int] The total miles in difficult terrain
+	* @param pace [string] The pace used
 	* @return [map] An associative array that represents a time object:
 	{ days: <int>, hours: <int>, minutes: <int>}
 	*/
-	var calculateDistance = function(normalTerrainMiles, difficultTerrainMiles, pace) {
+	var calculateTravelByLand = function(normalTerrainMiles, difficultTerrainMiles, pace) {
 		//0. Check the pace
 		if (!(pace == 'fast' || pace == 'slow' || pace == 'normal')) {
 			pace = "normal";
@@ -28,6 +30,10 @@ var TravelCalculator = (function () {
 		return mergedResult;
 	};
 
+	var calculateTravelBySea = function(totalMiles, boatType) {
+
+	};
+
 	var calculate = function(totalMiles, isDifficult, pace) {
 		var time = {
 			days: 0,
@@ -39,11 +45,11 @@ var TravelCalculator = (function () {
 			return time;
 		}
 
-		var milesPerDay = config.get("Client.5e." + pace + ".milesPerDay");
+		var milesPerDay = config.get("Client.5e.land." + pace + ".milesPerDay");
 		if (isDifficult) {
 			milesPerDay /= 2;
 		}
-		var maxHoursTraveledPerDay = config.get("Client.5e." + pace + ".hoursPerDay");
+		var maxHoursTraveledPerDay = config.get("Client.5e.land." + pace + ".hoursPerDay");
 		var milesPerHour = milesPerDay / maxHoursTraveledPerDay;
 		var minsPerMile = 60 / milesPerHour;
 		var remainingMiles = totalMiles % milesPerDay; 
@@ -71,7 +77,7 @@ var TravelCalculator = (function () {
 		time.minutes = modMinutes;
 
 		//2. Upconvert hours to days by mod-ing the total hours by the hours traveled in a day
-		var maxHoursTraveledPerDay = config.get("Client.5e." + pace + ".hoursPerDay");
+		var maxHoursTraveledPerDay = config.get("Client.5e.land." + pace + ".hoursPerDay");
 		var modHours = time.hours % maxHoursTraveledPerDay;
 		//Then, add the quotient back to the days since that represents
 		//how many days were made from the hours
@@ -86,7 +92,7 @@ var TravelCalculator = (function () {
 	};
   
 	return {
-  		calculateDistance : calculateDistance
+  		calculateDistance : calculateTravelByLand
 	};
 
 })();
