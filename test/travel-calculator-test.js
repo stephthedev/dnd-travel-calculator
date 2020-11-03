@@ -119,8 +119,109 @@ describe("Calculate travel time by land at ", function() {
   });
 });
 
+describe("Calculate travel time by sea ", function() {
+  describe("via galley", function() {
+    let tests = [
+      //1 hour
+      {args: {totalMiles: 4}, expected: {days: 0, hours: 1, minutes: 0}},
+      //12 hours
+      {args: {totalMiles: 48}, expected: {days: 0, hours: 12, minutes: 0}},
+      //1 day
+      {args: {totalMiles: 96}, expected: {days: 1, hours: 0, minutes: 0}},
+      //1 week
+      {args: {totalMiles: 672}, expected: {days: 7, hours: 0, minutes: 0}},
+      //30 days
+      {args: {totalMiles: 2880}, expected: {days: 30, hours: 0, minutes: 0}},
+      //1000 miles
+      {args: {totalMiles: 1000}, expected: {days: 10, hours: 10, minutes: 0}},
+    ];
+
+    tests.forEach(function(testDatum) {
+      it('for ' + testDatum.args.totalMiles + ' miles', function() {
+        runSeaTest(testDatum, "galley");
+      });
+    });
+  });
+
+  describe("via keelboat", function() {
+    let tests = [
+      //1 hour
+      {args: {totalMiles: 3}, expected: {days: 0, hours: 1, minutes: 0}},
+      //12 hours
+      {args: {totalMiles: 36}, expected: {days: 0, hours: 12, minutes: 0}},
+      //1 day
+      {args: {totalMiles: 72}, expected: {days: 1, hours: 0, minutes: 0}},
+      //1 week
+      {args: {totalMiles: 504}, expected: {days: 7, hours: 0, minutes: 0}},
+      //30 days
+      {args: {totalMiles: 2160}, expected: {days: 30, hours: 0, minutes: 0}},
+      //1000 miles
+      {args: {totalMiles: 1000}, expected: {days: 13, hours: 21, minutes: 20}},
+    ];
+
+    tests.forEach(function(testDatum) {
+      it('for ' + testDatum.args.totalMiles + ' miles', function() {
+        runSeaTest(testDatum, "keelboat");
+      });
+    });
+  });
+
+  describe("via longship", function() {
+    let tests = [
+      //1 hour
+      {args: {totalMiles: 5}, expected: {days: 0, hours: 1, minutes: 0}},
+      //12 hours
+      {args: {totalMiles: 60}, expected: {days: 0, hours: 12, minutes: 0}},
+      //1 day
+      {args: {totalMiles: 120}, expected: {days: 1, hours: 0, minutes: 0}},
+      //1 week
+      {args: {totalMiles: 840}, expected: {days: 7, hours: 0, minutes: 0}},
+      //30 days
+      {args: {totalMiles: 3600}, expected: {days: 30, hours: 0, minutes: 0}},
+      //1000 miles
+      {args: {totalMiles: 1000}, expected: {days: 8, hours: 8, minutes: 0}},
+    ];
+
+    tests.forEach(function(testDatum) {
+      it('for ' + testDatum.args.totalMiles + ' miles', function() {
+        runSeaTest(testDatum, "longship");
+      });
+    });
+  });
+
+  describe("via rowboat", function() {
+    let tests = [
+      //1 hour
+      {args: {totalMiles: 3}, expected: {days: 0, hours: 1, minutes: 0}},
+      //12 hours
+      {args: {totalMiles: 36}, expected: {days: 1, hours: 4, minutes: 0}},
+      //1 day
+      {args: {totalMiles: 24}, expected: {days: 1, hours: 0, minutes: 0}},
+      //1 week
+      {args: {totalMiles: 168}, expected: {days: 7, hours: 0, minutes: 0}},
+      //30 days
+      {args: {totalMiles: 720}, expected: {days: 30, hours: 0, minutes: 0}},
+      //1000 miles
+      {args: {totalMiles: 1000}, expected: {days: 41, hours: 5, minutes: 20}},
+    ];
+
+    tests.forEach(function(testDatum) {
+      it('for ' + testDatum.args.totalMiles + ' miles', function() {
+        runSeaTest(testDatum, "rowboat");
+      });
+    });
+  });
+});
+
 function runTest(testDatum, pace) {
-  var timeTaken = TC.calculateDistance(testDatum.args[0], testDatum.args[1], pace);
+  var timeTaken = TC.calculateTravelTimeByLand(testDatum.args[0], testDatum.args[1], pace);
+  assert.equal(testDatum.expected.days, timeTaken.days, "Unexpected days");
+  assert.equal(testDatum.expected.hours, timeTaken.hours, "Unexpected hours");
+  assert.equal(testDatum.expected.minutes, timeTaken.minutes, "Unexpected minutes");
+}
+
+function runSeaTest(testDatum, boatType) {
+  var timeTaken = TC.calculateTravelTimeBySea(testDatum.args.totalMiles, boatType);
   assert.equal(testDatum.expected.days, timeTaken.days, "Unexpected days");
   assert.equal(testDatum.expected.hours, timeTaken.hours, "Unexpected hours");
   assert.equal(testDatum.expected.minutes, timeTaken.minutes, "Unexpected minutes");
